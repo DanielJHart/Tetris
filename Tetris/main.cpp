@@ -9,6 +9,7 @@ int main(int argc, char **argv)
 	while (isRunning)
 	{
 		isRunning = game.Update(0.16f);
+		game.Render();
 	}
 
 	game.Close();
