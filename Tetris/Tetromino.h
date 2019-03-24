@@ -104,26 +104,12 @@ public:
 
 	void RotateRight()
 	{
-		// A square does not need rotating
-		if (type != TetrominoType::Square)
-		{
-			rotation = (rotation + 1) % 4;
-		
-
-			for (int i = 0; i < 4; ++i)
-			{
-				sf::Transform t;
-				t.rotate(90, sf::Vector2f(-0.5, -0.5));
-				pieces[i].SetPosition(t.transformPoint(pieces[i].GetPosition()));
-			}
-		}
-
-
+		Rotate(90);
 	}
 
 	void RotateLeft()
 	{
-		rotation = (rotation - 1) % 4;
+		Rotate(-90);
 	}
 
 	void Render(sf::RenderWindow* rw)
@@ -139,6 +125,22 @@ public:
 	TetrominoType type;
 	wchar_t rotation = 0;
 private:
+	void Rotate(float angle)
+	{
+		// A square does not need rotating
+		if (type != TetrominoType::Square)
+		{
+			sf::Transform t;
+			t.rotate(angle, sf::Vector2f(-0.5, -0.5));
+
+#pragma omp parallel for
+			for (int i = 0; i < 4; ++i)
+			{
+				pieces[i].SetPosition(t.transformPoint(pieces[i].GetPosition()));
+			}
+		}
+	}
+
 	sf::Vector2f m_Position;
 	sf::Texture m_Texture;
 	sf::Sprite m_Sprite;

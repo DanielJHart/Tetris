@@ -50,6 +50,15 @@ bool Game::Update(float dt)
 			t.RotateRight();
 		}
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		// Spawn Piece
+		if (!Latch)
+		{
+			Latch = true;
+			t.RotateLeft();
+		}
+	}
 	else if (Latch)
 	{
 		Latch = false;
