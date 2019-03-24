@@ -2,8 +2,8 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-#define tileWidth 32
-#define numberOfTetrominoes 7
+#include "Constants.h"
+
 
 Board::Board()
 {
@@ -12,9 +12,9 @@ Board::Board()
 
 void Board::Init()
 {
-	const std::string fileNames[numberOfTetrominoes]{ "Line", "S", "Z", "T", "L", "ReverseL", "Square" };
+	const std::string fileNames[NUMBER_OF_TETROMINOES]{ "Line", "S", "Z", "T", "L", "ReverseL", "Square" };
 
-	for (int i = 0; i < numberOfTetrominoes; ++i)
+	for (int i = 0; i < NUMBER_OF_TETROMINOES; ++i)
 	{
 		bool loaded = m_Textures[i].loadFromFile("Assets/Sprites/" + fileNames[i] + ".png");
 		
@@ -27,6 +27,8 @@ void Board::Init()
 	}
 
 	m_RenderTexture.create(320, 640);
+	m_GridTexture.loadFromFile("Assets/Sprites/grid.png");
+	m_GridSprite = sf::Sprite(m_GridTexture);
 
 	ClearBoard();
 }
@@ -38,7 +40,8 @@ void Board::Update()
 
 void Board::Render(sf::RenderWindow* renderWindow)
 {
-	m_RenderTexture.clear();
+	
+	m_RenderTexture.draw(m_GridSprite);
 
 	for (int j = 0; j < SIZEY; ++j)
 	{
@@ -51,7 +54,7 @@ void Board::Render(sf::RenderWindow* renderWindow)
 			{
 				// Render in xOffset + (tileWidth * x), yOffset + (tileWidth * y)
 				sf::Sprite sprite = m_sprites[val];
-				sprite.setPosition(tileWidth * i, tileWidth * j);
+				sprite.setPosition(TILE_WIDTH * i, TILE_WIDTH * j);
 				m_RenderTexture.draw(sprite);
 			}
 		}
@@ -59,6 +62,7 @@ void Board::Render(sf::RenderWindow* renderWindow)
 
 	m_RenderTexture.display();
 	renderWindow->draw(sf::Sprite(m_RenderTexture.getTexture()));
+	
 }
 
 void Board::ClearBoard()

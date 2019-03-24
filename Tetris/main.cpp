@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <SFML/Window.hpp>
 
+
 int main(int argc, char **argv)
 {
 	sf::RenderWindow window(sf::VideoMode(320, 640), "Tetris");
