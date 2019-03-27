@@ -12,59 +12,75 @@ void Game::Init(sf::RenderWindow* window)
 {
 	m_pRenderWindow = window;
 	mBoard.Init();
-	t = Tetromino(TetrominoType::L, sf::Vector2f(5 * TileWidth, 5 * TileWidth));
+	t = Tetromino(TetrominoType::L, sf::Vector2f(5, 5));
+	timer = 0;
 }
 
 
-bool Game::Update(float dt)
+bool Game::Update(float dt, sf::Event evt)
 {
 	static int i = 0;
 	static bool Latch = false;
 
+	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
 		return false;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+	if (evt.type == sf::Event::KeyPressed && !Latch)
 	{
-		// Spawn Piece
-		if (!Latch)
+		// A key has been pressed.
+		// Find what key has been pressed
+
+		// Set the latch so no repeats
+		Latch = true;
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 		{
-			Latch = true;
 			++i;
 			if (i == NUMBER_OF_TETROMINOES)
 			{
 				i = 0;
 			}
-
 			t = Tetromino(TetrominoType(i), sf::Vector2f(5 * TileWidth, 5 * TileWidth));
 		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		// Spawn Piece
-		if (!Latch)
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			Latch = true;
+			// Rotate piece right
 			t.RotateRight();
 		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		// Spawn Piece
-		if (!Latch)
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
-			Latch = true;
-			t.RotateLeft();
+			// Move Piece Down
+			t.MoveDown();
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			// Move Piece Right
+			t.MoveRight();
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			// Move Piece Left
+			t.MoveLeft();
 		}
 	}
-	else if (Latch)
+
+	if (evt.type == sf::Event::KeyReleased && Latch)
 	{
 		Latch = false;
 	}
 
 	mBoard.Update();
+
+	// If on the beat
+	timer += dt;
+	if (timer >= 1.0f)
+	{
+		ResetTimer();
+		mBoard.CheckForCollision(t);
+	}
 
 	return true;
 }
@@ -79,4 +95,9 @@ void Game::Render()
 
 void Game::Close()
 {
+}
+
+void Game::ResetTimer()
+{
+	timer = 0;
 }

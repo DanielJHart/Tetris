@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		isRunning = game.Update(0.16f);
+		isRunning = game.Update(0.16f, evt);
 		game.Render();
 	}
 

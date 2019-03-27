@@ -96,27 +96,59 @@ public:
 			break;
 		}
 
-		m_Position = pos;
+		m_GridPosition = pos;
+		m_RenderPosition = pos * (float)TILE_WIDTH;
 		this->type = type;
 		m_Sprite = sf::Sprite(m_Texture);
+		m_Sprite.setTexture(m_Texture);
 		m_Sprite.setPosition(sf::Vector2f(pos));
 	}
 
+	// Rotate tetronimo right
 	void RotateRight()
 	{
 		Rotate(90);
 	}
 
+	// Rotate tetronimo left
 	void RotateLeft()
 	{
 		Rotate(-90);
+	}
+
+	// Move tetronimo down 1 tile
+	void MoveDown()
+	{
+		Move(sf::Vector2f(0, 1));
+	}
+
+	// Move tetronimo left 1 tile
+	void MoveLeft()
+	{
+		Move(sf::Vector2f(-1, 0));
+	}
+
+	// Move tetronimo right 1 tile
+	void MoveRight()
+	{
+		Move(sf::Vector2f(1, 0));
+	}
+
+	// Returns the positions of the 4 pieces. Vecs must be an array of size 4.
+	void GetPositions(sf::Vector2f *vecs)
+	{
+		// Assume that vecs is an array of size 4.
+		for (int i = 0; i < 4; ++i)
+		{
+			vecs[i] = m_GridPosition + pieces[i].GetPosition();
+		}
 	}
 
 	void Render(sf::RenderWindow* rw)
 	{
 		for (int i = 0; i < 4; ++i)
 		{
-			m_Sprite.setPosition(m_Position + (pieces[i].GetPosition() * (float)TILE_WIDTH));
+			m_Sprite.setPosition(m_RenderPosition + (pieces[i].GetPosition() * (float)TILE_WIDTH));
 			rw->draw(m_Sprite);
 		}
 	}
@@ -125,6 +157,13 @@ public:
 	TetrominoType type;
 	wchar_t rotation = 0;
 private:
+	// Move the piece in a given direction
+	void Move(sf::Vector2f dir)
+	{
+		m_GridPosition += dir;
+		m_RenderPosition += sf::Vector2f(dir.x * TILE_WIDTH, dir.y * TILE_WIDTH);
+	}
+
 	void Rotate(float angle)
 	{
 		// A square does not need rotating
@@ -140,8 +179,7 @@ private:
 			}
 		}
 	}
-
-	sf::Vector2f m_Position;
+	sf::Vector2f m_RenderPosition, m_GridPosition;
 	sf::Texture m_Texture;
 	sf::Sprite m_Sprite;
 };

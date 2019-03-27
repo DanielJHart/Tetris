@@ -40,7 +40,6 @@ void Board::Update()
 
 void Board::Render(sf::RenderWindow* renderWindow)
 {
-	
 	m_RenderTexture.draw(m_GridSprite);
 
 	for (int j = 0; j < SIZEY; ++j)
@@ -63,6 +62,17 @@ void Board::Render(sf::RenderWindow* renderWindow)
 	m_RenderTexture.display();
 	renderWindow->draw(sf::Sprite(m_RenderTexture.getTexture()));
 	
+}
+
+bool Board::CheckForCollision(Tetromino t)
+{
+	sf::Vector2f vecs[4];
+	t.GetPositions(vecs);
+
+
+
+	int x = 0;
+	return false;
 }
 
 void Board::ClearBoard()

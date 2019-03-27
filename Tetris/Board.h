@@ -2,6 +2,7 @@
 
 #include "AssetPool.h"
 #include <SFML/Graphics.hpp>
+#include "Tetromino.h"
 
 constexpr int SIZEX = 10;
 constexpr int SIZEY = 20;
@@ -13,7 +14,7 @@ public:
 	void Init();
 	void Update();
 	void Render(sf::RenderWindow* window);
-	bool CheckForCollision();
+	bool CheckForCollision(Tetromino t);
 	void ClearBoard();
 private:
 	char m_Board[SIZEX * SIZEY];
